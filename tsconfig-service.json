@@ -1,0 +1,22 @@
+{
+    "files": [
+        "src/service/service.ts"
+    ],
+    "compilerOptions": {
+        "module": "commonjs", //Use commonjs because that is what node uses
+        "esModuleInterop": true,
+        "noImplicitAny": true,
+        "target": "es6",
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "outDir": "dist",
+        "baseUrl": ".",
+        "paths": {
+            "*" : [
+                "node_modules/*",
+                "src/types/*"
+            ]
+        }
+        
+    }
+}
