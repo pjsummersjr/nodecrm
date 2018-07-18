@@ -10,23 +10,26 @@ router.use(function logTime(req, res, next) {
 })
 
 router.use(function checkForToken(req, res, next){
-    if(!req.body.authorization){
+    if(!req.get("Authorization")) {
+        console.error("Did not get an authorization token in the header.");
         res.status(401);
         res.json({
             error: "No authorization token provided"
-        })
+        })        
     }
-    console.log(req.body);
-    next();
+    else {
+        next();
+    }
+    
 })
 
-router.post('/', function(req, res){
+router.get('/', function(req, res){
     let crmUrl = "https://paulsumm.crm.dynamics.com/api/data/v9.0/accounts";
-    //console.log(`Received authorization token from client\n${req.body.authorization}`);
+    //console.log("Authorization string: " + req.get("Authorization"));
     let options = {
         url: crmUrl,
         headers: {
-            "Authorization": "Bearer " + req.body.authorization,
+            "Authorization": req.get("Authorization"),
             "Accept": "application/json;odata.metadata=minimal;"
         }
     }
@@ -42,8 +45,10 @@ router.post('/', function(req, res){
                 })
             }
             else {
+                let bodyAsJson = JSON.parse(body);
+                res.set('Access-Control-Allow-Origin', '*');
                 res.status(200);
-                res.json(body);  
+                res.json(bodyAsJson);  
             }
         }
     });

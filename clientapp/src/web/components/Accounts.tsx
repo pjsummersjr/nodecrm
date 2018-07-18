@@ -35,17 +35,17 @@ export default class Accounts extends React.Component<IAccountsProps, IAccountsS
             let theToken = context.getAccessToken();
             console.debug("Auth token: " + theToken); //need to remove this at some point
             let req = new XMLHttpRequest();
+            //let url = "https://paulsumm.crm.dynamics.com/api/data/v9.0/accounts";
             let url = "http://localhost:3001/accounts";
-            
-            req.open("POST", url, true);
-            //req.setRequestHeader("Authorization", "Bearer " + theToken);
+            req.open("GET", url, true);
+            req.setRequestHeader("Authorization", "Bearer " + theToken);
             req.setRequestHeader("Accept", "application/json;odata.metadata=minimal;");
-            req.setRequestHeader("Content-type", "application/json" );
+            req.setRequestHeader("Cache-control", "no-store");
+            //req.setRequestHeader("Content-type", "application/json" );
             
-            let postBody = JSON.stringify(JSON.parse('{ "authorization": "' + theToken + '" }'));
-                
             req.onload = () => {
-                if(req.status == 200){
+                console.log("In the onload method");
+                if(req.status == 200 || req.status == 304){
                     let records = JSON.parse(req.responseText);
                     console.debug("Retrieved JSON. Updating state with account records.");
                     this.setState({
@@ -61,7 +61,7 @@ export default class Accounts extends React.Component<IAccountsProps, IAccountsS
                 }
             }
             
-            req.send(postBody);
+            req.send();
         }
         else {
             console.error("No user logged in.");
