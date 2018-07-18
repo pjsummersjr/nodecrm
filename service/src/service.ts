@@ -4,14 +4,15 @@ import bodyParser from 'body-parser';
 import router from './routes';
 import cors from 'cors';
 import logger from 'morgan';
+import * as serviceConfig from './serviceConfig';
 
-let port = 3001;
+let port = serviceConfig.expressConfig.port;
+
+console.log("Service config: " + serviceConfig);
 
 var app = express();
-let corsOptions = {
-    origin: 'http://localhost:3000'
-}
-app.options('*', cors(corsOptions));
+
+app.options(serviceConfig.corsOptions.preflight, cors(serviceConfig.corsOptions));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());

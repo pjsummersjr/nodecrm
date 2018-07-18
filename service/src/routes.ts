@@ -3,10 +3,12 @@ import logger from 'morgan';
 import request from 'request';
 import cors from 'cors';
 
+import * as serviceConfig from './serviceConfig';
+
 let router = express.Router();
 
 let corsOptions = {
-    origin: 'http://localhost:3000'
+    origin: '*'
 }
 
 router.use(function logTime(req, res, next) {
@@ -28,7 +30,7 @@ router.use(function checkForToken(req, res, next){
     
 })
 
-router.get('/', cors(corsOptions) , function(req, res){
+router.get('/', cors(serviceConfig.corsOptions) , function(req, res){
     let crmUrl = "https://paulsumm.crm.dynamics.com/api/data/v9.0/accounts";
 
     let options = {
@@ -51,7 +53,7 @@ router.get('/', cors(corsOptions) , function(req, res){
             }
             else {
                 let bodyAsJson = JSON.parse(body);
-                //res.set('Access-Control-Allow-Origin', '*'); //This response header is required to provide CORS support
+                
                 res.status(200);
                 res.json(bodyAsJson);  
             }
