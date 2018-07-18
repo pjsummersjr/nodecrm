@@ -7,6 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 
 interface IAccountsProps {}
 interface IAccountsState {
@@ -75,11 +76,15 @@ export default class Accounts extends React.Component<IAccountsProps, IAccountsS
         if(this.state && this.state.accountRecords && this.state.accountRecords && this.state.accountRecords.length > 0){
             console.debug("State is not null. Rendering account records.");
             return (this.state.accountRecords.map((item, index) => {
-                return (<Card>
-                            <CardContent>
-                                <Typography>{item.name}</Typography>
-                            </CardContent>
-                        </Card>)
+                return (
+                        <Grid item xs={3}>
+                            <Card>
+                                <CardContent>
+                                    <Typography>{item.name}</Typography>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                        )
             }));
         }
         else {

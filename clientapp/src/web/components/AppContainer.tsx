@@ -7,7 +7,10 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import Grid from '@material-ui/core/Grid';
 import { Icon } from '@material-ui/core';
+
+
 
 interface IAppContainerProps {}
 
@@ -19,14 +22,24 @@ export default class AppContainer extends React.Component<IAppContainerProps, IA
     public render() {
         return (
             <div>
-                <AppBar position="static">
-                    <IconButton color="inherit" aria-label="Menu">
-                        <MenuIcon/>
-                    </IconButton>
-                    <Typography variant="title" color="inherit">Three Clouds, Three Ways</Typography>
-                    <LoginModule></LoginModule>
+                <AppBar position="static" className="appBar">
+                    <Grid container spacing={24}>
+                        <Grid item xs={1}>
+                            <IconButton color="inherit" aria-label="Menu">
+                                <MenuIcon/>
+                            </IconButton>
+                        </Grid>
+                        <Grid item xs={8} className="appTitle">
+                            <Typography variant="title" color="inherit">Three Clouds, Three Ways</Typography>
+                        </Grid>
+                        <Grid item xs>
+                            <LoginModule></LoginModule>
+                        </Grid>
+                    </Grid>
                 </AppBar>
-                <Accounts />
+                <Grid container spacing={24}>
+                    <Accounts />
+                </Grid>
             </div>
         );
     }

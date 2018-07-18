@@ -1,7 +1,5 @@
 import * as React from 'react';
 import Button from '@material-ui/core/button';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
 import authConfig from '../auth/authConfig';
@@ -50,10 +48,8 @@ export default class LoginModule extends React.Component<ILoginModuleProps, ILog
         else {
             return (
                 <div>
-                    <Typography variant="headline">{this.state.userName}</Typography>
-                    <Typography variant="subheading" color="textSecondary">
-                        {this.state.emailAddress}
-                    </Typography>
+                    <Typography variant="body2" color="inherit">{this.state.userName}</Typography>
+                    <Typography variant="body1" color="inherit">{this.state.emailAddress}</Typography>
                 </div>
             );
         }
