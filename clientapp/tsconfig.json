@@ -1,6 +1,6 @@
 {
     "files": [
-        "src/service/service.ts"
+        "src/server.ts"
     ],
     "compilerOptions": {
         "module": "commonjs", //Use commonjs because that is what node uses
@@ -9,6 +9,7 @@
         "target": "es6",
         "moduleResolution": "node",
         "sourceMap": true,
+        "jsx": "react",
         "outDir": "dist",
         "baseUrl": ".",
         "paths": {

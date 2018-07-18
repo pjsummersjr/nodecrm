@@ -1,0 +1,39 @@
+{
+  "name": "net.paulsumm.threeclouds.service",
+  "version": "1.0.0",
+  "description": "Service that access all three Microsoft clouds",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pjsummersjr/nodecrm.git"
+  },
+  "author": "Paul Summers",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pjsummersjr/nodecrm/issues"
+  },
+  "homepage": "https://github.com/pjsummersjr/nodecrm#readme",
+  "dependencies": {
+    "@types/body-parser": "^1.17.0",
+    "@types/cookie-parser": "^1.4.1",
+    "@types/cors": "^2.8.4",
+    "@types/morgan": "^1.7.35",
+    "@types/request": "^2.47.1",
+    "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.3",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "morgan": "^1.9.0",
+    "request": "^2.87.0"
+  },
+  "devDependencies": {
+    "browserify": "^16.2.2",
+    "gulp": "^3.9.1",
+    "gulp-typescript": "^5.0.0-alpha.3",
+    "tsify": "^4.0.0",
+    "vinyl-source-stream": "^2.0.0"
+  }
+}

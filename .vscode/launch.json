@@ -1,0 +1,28 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Service",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}\\dist\\service\\*.js",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run-script", "debugService"            
+            ],
+            "port": 3002
+        },
+        {
+            "name": "Debug Service as TypeScript",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/service/service.ts",
+            "outFiles": [
+                "${workspaceFolder}/dist/service/**/*.js"
+            ]
+        }
+    ]
+}

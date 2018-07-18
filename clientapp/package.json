@@ -1,0 +1,37 @@
+{
+  "name": "net.paulsumm.threeclouds.spa",
+  "version": "1.0.0",
+  "description": "Single page app for consuming my ThreeClouds service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pjsummersjr/nodecrm.git"
+  },
+  "author": "Paul Summers",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pjsummersjr/nodecrm/issues"
+  },
+  "homepage": "https://github.com/pjsummersjr/nodecrm#readme",
+  "dependencies": {
+    "@material-ui/core": "^1.4.0",
+    "@material-ui/icons": "^1.1.0",
+    "@types/express": "^4.16.0",
+    "@types/react": "^16.4.6",
+    "@types/react-dom": "^16.0.6",
+    "adal-typescript": "^1.0.1",
+    "express": "^4.16.3",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1"
+  },
+  "devDependencies": {
+    "browserify": "^16.2.2",
+    "gulp": "^3.9.1",
+    "gulp-typescript": "^5.0.0-alpha.3",
+    "tsify": "^4.0.0",
+    "vinyl-source-stream": "^2.0.0"
+  }
+}
