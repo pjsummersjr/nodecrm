@@ -18,7 +18,12 @@ gulp.task("copy-html", function() {
         .pipe(gulp.dest("dist/web"));
 });
 
-gulp.task("spa", ["copy-html"], function() {
+gulp.task("copy-css", function() {
+    return gulp.src("src/web/styles/*.css")
+        .pipe(gulp.dest("dist/web/styles"))
+})
+
+gulp.task("spa", ["copy-html", "copy-css"], function() {
     return browserify({
         basedir: '.',
         debug: true,
