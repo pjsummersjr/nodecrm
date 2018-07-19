@@ -6,6 +6,7 @@ let authConfig = {
     redirectUri: 'http://localhost:3000',
     resource: '',
     responseType: 'token',
+    //extraQueryParameter: 'resource=https://paulsumm.sharepoint.com&resource=https://paulsumm.crm.dynamics.com' - this doesn't work
     extraQueryParameter: 'resource=https://paulsumm.crm.dynamics.com'
 }
 

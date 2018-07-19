@@ -1,7 +1,7 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
-import router from './routes';
+import accountRouter from './account.routes';
 import cors from 'cors';
 import logger from 'morgan';
 import * as serviceConfig from './serviceConfig';
@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(logger('dev'));
 
-app.use('/accounts', router);
+app.use('/accounts', accountRouter);
 
 app.get('/', (req, res) => {
     res.status(404);

@@ -4,9 +4,11 @@ import {AdalConfig, Authentication} from 'adal-typescript';
 import authConfig from '../auth/authConfig';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
 import CardMedia from '@material-ui/core/CardMedia';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
+import LanguageIcon from '@material-ui/icons/Language';
 import Grid from '@material-ui/core/Grid';
 
 interface IAccountsProps {}
@@ -15,7 +17,9 @@ interface IAccountsState {
     accountRecords?:IAccountEntity[]
 }
 interface IAccountEntity {
-    name: string
+    accountnumber: string,
+    name: string,
+    websiteurl: string
 }
 export default class Accounts extends React.Component<IAccountsProps, IAccountsState> {
 
@@ -36,14 +40,13 @@ export default class Accounts extends React.Component<IAccountsProps, IAccountsS
             let theToken = context.getAccessToken();
             console.debug("Auth token: " + theToken); //need to remove this at some point
             let req = new XMLHttpRequest();
-            //let url = "https://paulsumm.crm.dynamics.com/api/data/v9.0/accounts";
+            
             let url = "http://localhost:3001/accounts";
             req.open("GET", url, true);
             req.setRequestHeader("Authorization", "Bearer " + theToken);
             req.setRequestHeader("Accept", "application/json;odata.metadata=minimal;");
             req.setRequestHeader("Cache-control", "no-store");
-            //req.setRequestHeader("Content-type", "application/json" );
-            
+                        
             req.onload = () => {
                 console.log("In the onload method");
                 if(req.status == 200 || req.status == 304){
@@ -72,16 +75,25 @@ export default class Accounts extends React.Component<IAccountsProps, IAccountsS
         }
     }
 
+    public openWebsite = (websiteurl: string, e: any) => {
+        alert(`Website is: ${websiteurl}`);
+    }
+
     public render() {
         if(this.state && this.state.accountRecords && this.state.accountRecords && this.state.accountRecords.length > 0){
             console.debug("State is not null. Rendering account records.");
             return (this.state.accountRecords.map((item, index) => {
                 return (
-                        <Grid item xs={3}>
+                        <Grid item xs={3} key={item.accountnumber}>
                             <Card>
                                 <CardContent>
                                     <Typography>{item.name}</Typography>
                                 </CardContent>
+                                <CardActions>
+                                    <IconButton color="primary" onClick={(e) => this.openWebsite(item.websiteurl, e)}>
+                                        <LanguageIcon />
+                                    </IconButton>
+                                </CardActions>
                             </Card>
                         </Grid>
                         )
