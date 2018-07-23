@@ -1,9 +1,10 @@
 import * as React from 'react';
+import * as Adal from '../auth/adalRequest';
 import Button from '@material-ui/core/button';
 import Typography from '@material-ui/core/Typography';
 
-import authConfig from '../auth/authConfig';
-import { AdalConfig, Authentication } from 'adal-typescript';
+/* import authConfig from '../auth/authConfig';
+import { AdalConfig, Authentication } from 'adal-typescript'; */
 
 interface ILoginModuleProps {}
 interface ILoginModuleState {
@@ -16,29 +17,26 @@ interface ILoginModuleState {
 export default class LoginModule extends React.Component<ILoginModuleProps, ILoginModuleState> {
 
     public componentWillMount() {
-        Authentication.getAadRedirectProcessor().process();
-        let config = new AdalConfig(authConfig.clientId,authConfig.tenant,authConfig.redirectUri,"",authConfig.responseType,authConfig.extraQueryParameter);
-        let context = Authentication.getContext(config);
-        let user = context.getUser();
-        if(user) {            
-            this.setState({
-                isLoggedIn: true,
-                emailAddress: user.family_name,
-                userName: user.name
-            })
-        }
-        else {
-            this.setState({
-                isLoggedIn: false
-            })
-        }
+        this.setState({
+            isLoggedIn: false
+        })
     }
 
     public login = () => {
-        console.debug("Logging in to Azure Active Directory");
-        let config = new AdalConfig(authConfig.clientId,authConfig.tenant,authConfig.redirectUri,"",authConfig.responseType,authConfig.extraQueryParameter);
-        let context  = Authentication.getContext(config);
-        context.login();
+
+        console.log(`Attempting login`);
+        let component = this;
+        Adal.adalRequest({
+            url: 'http://localhost:3001/accounts',
+            headers: {
+                "Accept": "application/json;odata.metadata=minimal;",
+                "Cache-control": "no-store"
+            }
+        }).then(function(data){
+            console.log(`The data from the new adal implementation: ${data}`);
+        }, function(err) {
+            console.log(`Error retrieving data ${err}`);
+        });
     }
 
     public render() {

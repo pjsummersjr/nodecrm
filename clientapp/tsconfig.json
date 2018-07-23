@@ -5,7 +5,7 @@
     "compilerOptions": {
         "module": "commonjs", //Use commonjs because that is what node uses
         "esModuleInterop": true,
-        "noImplicitAny": true,
+        "noImplicitAny": false,
         "target": "es6",
         "moduleResolution": "node",
         "sourceMap": true,

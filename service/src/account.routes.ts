@@ -1,6 +1,6 @@
 import * as express from 'express';
 import logger from 'morgan';
-import request from 'request';
+import request, { UriOptions } from 'request';
 import cors from 'cors';
 
 import * as serviceConfig from './serviceConfig';
@@ -40,8 +40,15 @@ router.use(function checkForToken(req, res, next){
  * Retrieves documents trending around the current user
  */
 router.get('/docs', cors(serviceConfig.corsOptions), function(req, res) {
-    let url = "https://paulsumm.sharepoint.com/_api/search/query?QueryText='*'";
-    getContent(url, req, res);
+    let spurl = "https://paulsumm.sharepoint.com/_api/search/query?QueryText='*'";
+    let options = {
+        url: spurl,
+        headers: {
+            "Authorization": req.get('Authorization'),
+            "Accept": "application/json; odata=verbose"
+        }
+    }
+    getContent(options, req, res);
 });
 
 /**
@@ -50,7 +57,14 @@ router.get('/docs', cors(serviceConfig.corsOptions), function(req, res) {
 router.get('/', cors(serviceConfig.corsOptions) , function(req, res){
     //Want my select properties to reflect the required fields - might want to parameterize (OData-ify) this method as well
     let crmUrl = "https://paulsumm.crm.dynamics.com/api/data/v9.0/accounts?$select=name,websiteurl,accountnumber";
-    getContent(crmUrl, req, res);
+    let options = {
+        url: crmUrl,
+        headers: {
+            "Authorization": req.get('Authorization'),
+            "Accept": "application/json; odata.metadata=minimal;"
+        }
+    }
+    getContent(options, req, res);
 });
 /**
  * Encapsulates code for making calls to my ThreeCloud endpoints. For GET requests only.
@@ -58,17 +72,11 @@ router.get('/', cors(serviceConfig.corsOptions) , function(req, res){
  * @param req 
  * @param res 
  */
-function getContent(urlPath: string, req: any, res: any) {
-    console.log(`Requesting resources from: ${urlPath}`)
-    let options = {
-        url: urlPath,
-        headers: {
-            "Authorization": req.get('Authorization'),
-            "Accept": "application/json;odata.metadata=minimal;"
-        }
-    }
+function getContent(options: any, req: any, res: any) {
+    console.log(`Requesting resources from: ${options.url}`)
+    console.log(`Access token: ${req.get('Authorization')}`);
 
-    request.get(options, (error, response, body) => {
+    request.get(options, (error: any, response: any, body: any) => {
         if(error) {
             console.error(`An error occurred:\n${error}`);
         }
