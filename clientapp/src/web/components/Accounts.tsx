@@ -3,29 +3,38 @@ import * as Adal from '../auth/adalRequest';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
-import CardMedia from '@material-ui/core/CardMedia';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import LanguageIcon from '@material-ui/icons/Language';
+import GroupIcon from '@material-ui/icons/Group';
 import Grid from '@material-ui/core/Grid';
 import LinearProgress from '@material-ui/core/LinearProgress';
+
+import ContactsDialog from './AccountContactsDialog';
 
 interface IAccountsProps {}
 interface IAccountsState {
     status?: string,
-    accountRecords?:IAccountEntity[]
+    accountRecords?:IAccountEntity[],
+    contactsDialog: Map<string, boolean>
 }
 interface IAccountEntity {
     accountid: string,
     name: string,
     websiteurl: string
 }
+
+interface Hashtable<T> {
+    [key: string]: T;
+}
 export default class Accounts extends React.Component<IAccountsProps, IAccountsState> {
 
     public componentWillMount(){
+        let tmp: Map<string, boolean> = new Map<string, boolean>();
         this.setState({
             status: "Loading...",
-            accountRecords: []
+            accountRecords: [],
+            contactsDialog: tmp
         });
     }
 
@@ -57,10 +66,27 @@ export default class Accounts extends React.Component<IAccountsProps, IAccountsS
         alert(`Website is: ${websiteurl}`);
     }
 
+    public openContacts = (accountid: string, e: any) => {
+        let tmp = this.state.contactsDialog;
+        tmp.set(accountid, true);
+        this.setState({
+           contactsDialog: tmp 
+        });
+    }
+
+    public closeDialog = (accountid: string, openState: boolean) => {
+        let tmp = this.state.contactsDialog;
+        tmp.set(accountid, openState);
+        this.setState({
+            contactsDialog: tmp
+        });
+    } 
+
     public render() {
         if(this.state && this.state.accountRecords && this.state.accountRecords && this.state.accountRecords.length > 0){
             console.debug("State is not null. Rendering account records.");
             return (this.state.accountRecords.map((item, index) => {
+                let dialogState: boolean = this.state.contactsDialog.get(item.accountid) ? this.state.contactsDialog.get(item.accountid) : false;
                 return (
                         <Grid item xs={3} key={item.accountid}>
                             <Card>
@@ -71,9 +97,13 @@ export default class Accounts extends React.Component<IAccountsProps, IAccountsS
                                     <IconButton color="primary" onClick={(e) => this.openWebsite(item.websiteurl, e)}>
                                         <LanguageIcon />
                                     </IconButton>
+                                    <IconButton color="primary" onClick={(e) => this.openContacts(item.accountid, e)}>
+                                        <GroupIcon />
+                                    </IconButton>
                                 </CardActions>
+                                <ContactsDialog onClose={this.closeDialog} acccountid={item.accountid} accountname={item.name} open={dialogState} />
                             </Card>
-                        </Grid>
+                        </Grid>                        
                         )
             }));
         }

@@ -7,9 +7,7 @@ import * as serviceConfig from './serviceConfig';
 
 let router = express.Router();
 
-let corsOptions = {
-    origin: '*'
-}
+//router.options(serviceConfig.corsOptions.preflight, cors(serviceConfig.corsOptions));
 
 router.use(function logTime(req, res, next) {
     console.log('Time: ', Date.now());
@@ -29,13 +27,7 @@ router.use(function checkForToken(req, res, next){
     }
     
 })
-/**
- * Searches for accounts by name
- */
-/* router.get('/:name', cors(serviceConfig.corsOptions), function(req, res){
-    let crmUrl = "https://paulsumm.crm.dynamics.com/api/data/v9.0/accounts?$filter=name eq '" + req.params.name + "'";
-    getContent(crmUrl, req, res);
-}); */
+
 /**
  * Retrieves documents trending around the current user
  */
@@ -50,6 +42,21 @@ router.get('/docs', cors(serviceConfig.corsOptions), function(req, res) {
     }
     getContent(options, req, res);
 });
+
+router.get('/:accountid/contacts', cors(serviceConfig.corsOptions),
+    function(req, res){
+        console.log(`Account id is: ${req.params.accountid}`)
+        let crmUrl = `https://paulsumm.crm.dynamics.com/api/data/v9.0/contacts?$filter=_parentcustomerid_value eq ${req.params.accountid}&$select=fullname,jobtitle,telephone1,emailaddress1`;
+        let options = {
+            url: crmUrl,
+            headers: {
+                "Authorization": req.get('Authorization'),
+                "Accept": "application/json; odata.metadata=minimal;"
+            }
+        }
+        getContent(options, req, res);
+    }
+);
 
 /**
  * Returns all accounts
@@ -97,3 +104,12 @@ function getContent(options: any, req: any, res: any) {
 }
 
 export default router;
+
+
+/**
+ * Searches for accounts by name
+ */
+/* router.get('/:name', cors(serviceConfig.corsOptions), function(req, res){
+    let crmUrl = "https://paulsumm.crm.dynamics.com/api/data/v9.0/accounts?$filter=name eq '" + req.params.name + "'";
+    getContent(crmUrl, req, res);
+}); */
