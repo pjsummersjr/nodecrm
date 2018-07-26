@@ -1,3 +1,10 @@
 .appBar {
     margin-bottom: 5px;
 }
+
+.expansion-summary-75{
+    flex-basis: 75%
+}
+.expansion-summary-25{
+    flex-basis: 25%
+}

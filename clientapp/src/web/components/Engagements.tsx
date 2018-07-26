@@ -5,8 +5,10 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Paper from '@material-ui/core/Paper';
+import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions';
+import Button from '@material-ui/core/Button';
 
 import Engagement from '../Entities/Engagements';
 
@@ -23,6 +25,14 @@ export default class Engagements extends React.Component<IEngagementsProps, IEng
             engagements: [],
             status: "Loading"
         });
+    }
+
+    public loadStatus = () => {
+
+    }
+
+    public loadDocuments = (engagementid, customername, e) => {
+        alert(`Loading data for engagement ${customername}`);
     }
 
     public componentDidMount() {
@@ -56,13 +66,22 @@ export default class Engagements extends React.Component<IEngagementsProps, IEng
                 return(
                     <ExpansionPanel key={item.engagementid}>
                         <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-                            <Typography>{item.name}</Typography>
+                            <div className="expansion-summary-75">
+                                <Typography variant="subheading">{item.name}</Typography>
+                            </div>
+                            <div className="expansion-summary-25">
+                                <Typography variant="body2">{item.customername}</Typography>
+                            </div>
                         </ExpansionPanelSummary>
                         <ExpansionPanelDetails>
                             <Typography>
                                 {item.goal}
                             </Typography>
-                        </ExpansionPanelDetails>
+                        </ExpansionPanelDetails>                        
+                        <ExpansionPanelActions>
+                            <Button size="small" onClick={(e) => this.loadDocuments(item.engagementid, item.customername, e)}>Show Documents</Button>
+                            <Button size="small" color="primary">Show Status Details</Button>
+                        </ExpansionPanelActions>
                     </ExpansionPanel>                    
                     );
             });
@@ -78,7 +97,7 @@ export default class Engagements extends React.Component<IEngagementsProps, IEng
                 )
         }
         else {
-            return (<div>Nothing found :-(</div>);
+            return (<div><LinearProgress /></div>);
         }
     }
 }
