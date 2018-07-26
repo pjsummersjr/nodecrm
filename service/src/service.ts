@@ -2,6 +2,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import accountRouter from './account.routes';
+import engagementsRouter from './engagement.routes';
 import cors from 'cors';
 import logger from 'morgan';
 import * as serviceConfig from './serviceConfig';
@@ -18,6 +19,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 app.use(logger('dev'));
 
+app.use('/engagements', engagementsRouter);
 app.use('/accounts', accountRouter);
 
 app.get('/', (req, res) => {

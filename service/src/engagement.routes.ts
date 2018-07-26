@@ -4,10 +4,9 @@ import request, { UriOptions } from 'request';
 import cors from 'cors';
 
 import * as serviceConfig from './serviceConfig';
+import Engagement from './entities/engagement';
 
 let router = express.Router();
-
-//router.options(serviceConfig.corsOptions.preflight, cors(serviceConfig.corsOptions));
 
 router.use(function logTime(req, res, next) {
     console.log('Time: ', Date.now());
@@ -24,29 +23,14 @@ router.use(function checkForToken(req, res, next){
     }
     else {
         next();
-    }
-    
+    }    
 })
 
-/**
- * Retrieves documents trending around the current user
- */
-router.get('/docs', cors(serviceConfig.corsOptions), function(req, res) {
-    let spurl = "https://paulsumm.sharepoint.com/_api/search/query?QueryText='*'";
-    let options = {
-        url: spurl,
-        headers: {
-            "Authorization": req.get('Authorization'),
-            "Accept": "application/json; odata=verbose"
-        }
-    }
-    getContent(options, req, res);
-});
 
-router.get('/:accountid/contacts', cors(serviceConfig.corsOptions),
+router.get('/:engagementid', cors(serviceConfig.corsOptions),
     function(req, res){
         console.log(`Account id is: ${req.params.accountid}`)
-        let crmUrl = `https://mtcprod.crm.dynamics.com/api/data/v8.2/contacts?$top=50&$filter=_parentcustomerid_value eq ${req.params.accountid}&$select=fullname,jobtitle,telephone1,emailaddress1`;
+        let crmUrl = `https://mtcprod.crm.dynamics.com/api/data/v8.2/api/msdyn_workorders?$filter=msdyn_workorderid eq ${req.params.engagementid}&$expand`;
         let options = {
             url: crmUrl,
             headers: {
@@ -59,12 +43,12 @@ router.get('/:accountid/contacts', cors(serviceConfig.corsOptions),
 );
 
 /**
- * Returns all accounts
+ * Returns all engagements
  */
 router.get('/', cors(serviceConfig.corsOptions) , function(req, res){
-    console.log('Default accounts route');
+    console.log('Default engagements route');
     //Want my select properties to reflect the required fields - might want to parameterize (OData-ify) this method as well
-    let crmUrl = "https://mtcprod.crm.dynamics.com/api/data/v8.2/accounts?$select=name,websiteurl,accountnumber&$top=50";
+    let crmUrl = "https://mtcprod.crm.dynamics.com/api/data/v8.2/msdyn_workorders?$top=50&$select=msdyn_name,mtc_title,mtc_goal,mtc_siebelaccountname,mtc_engagementlead,mtc_engagementnumber,msdyn_workorderid";
     let options = {
         url: crmUrl,
         headers: {
@@ -96,21 +80,31 @@ function getContent(options: any, req: any, res: any) {
                 })
             }
             else {
-                let bodyAsJson = JSON.parse(body);
+                let engagements = mapToEntity(JSON.parse(body));
                 res.status(200);
-                res.json(bodyAsJson);
+                res.json(engagements);
             }
         }
     });
 }
 
+function mapToEntity(data:any){
+    let engagements: Engagement[] = [];
+    //console.log(data);
+    data.value.map((item: any, index: any) => {
+        let eng:Engagement = {
+            name: item.msdyn_name,
+            customername: item.mtc_siebelaccountname,
+            leadarchitect: item.mtc_engagementlead,
+            startdate: new Date(),
+            enddate: new Date(),
+            goal: item.mtc_goal,
+            engagementid: item.msdyn_workorderid,
+            engagementnum: item.mtc_engagementnumbe
+        }
+        engagements.push(eng);        
+    });
+    return engagements;
+}
+
 export default router;
-
-
-/**
- * Searches for accounts by name
- */
-/* router.get('/:name', cors(serviceConfig.corsOptions), function(req, res){
-    let crmUrl = "https://paulsumm.crm.dynamics.com/api/data/v9.0/accounts?$filter=name eq '" + req.params.name + "'";
-    getContent(crmUrl, req, res);
-}); */

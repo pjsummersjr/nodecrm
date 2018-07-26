@@ -41,7 +41,7 @@ export default class LoginModule extends React.Component<ILoginModuleProps, ILog
 
     public render() {
         if(!this.state.isLoggedIn) {
-            return (<Button variant="contained" color="primary" onClick={this.login}>Login</Button>);
+            return (<Button color="inherit" onClick={this.login}>Login</Button>);
         }
         else {
             return (

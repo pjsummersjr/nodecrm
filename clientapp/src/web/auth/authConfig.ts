@@ -8,7 +8,8 @@ let authConfig = {
     extraQueryParameter: 'nux=1',
     endpoints: {
         'http://localhost:3001/accounts/docs': 'https://paulsumm.sharepoint.com',
-        'http://localhost:3001/accounts': 'https://paulsumm.crm.dynamics.com',
+        'http://localhost:3001/accounts': 'https://mtcprod.crm.dynamics.com',
+        'http://localhost:3001/engagements': 'https://mtcprod.crm.dynamics.com',
         'http://localhost:3001/insights': 'https://graph.microsoft.com'
     },
     responseType:'token',

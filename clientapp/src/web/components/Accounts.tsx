@@ -85,7 +85,7 @@ export default class Accounts extends React.Component<IAccountsProps, IAccountsS
     public render() {
         if(this.state && this.state.accountRecords && this.state.accountRecords && this.state.accountRecords.length > 0){
             console.debug("State is not null. Rendering account records.");
-            return (this.state.accountRecords.map((item, index) => {
+            let accounts = this.state.accountRecords.map((item, index) => {
                 let dialogState: boolean = this.state.contactsDialog.get(item.accountid) ? this.state.contactsDialog.get(item.accountid) : false;
                 return (
                         <Grid item xs={3} key={item.accountid}>
@@ -105,7 +105,12 @@ export default class Accounts extends React.Component<IAccountsProps, IAccountsS
                             </Card>
                         </Grid>                        
                         )
-            }));
+            })
+            return (
+                <Grid container spacing={24}>
+                    {accounts}
+                </Grid>
+            );
         }
         else {
             console.debug("No account records in state object.");
