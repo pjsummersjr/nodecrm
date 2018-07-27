@@ -3,6 +3,8 @@ import logger from 'morgan';
 import request, { UriOptions } from 'request';
 import cors from 'cors';
 
+import q from 'q';
+
 import * as serviceConfig from './serviceConfig';
 import Engagement from './entities/engagement';
 
@@ -38,7 +40,14 @@ router.get('/:engagementid', cors(serviceConfig.corsOptions),
                 "Accept": "application/json; odata.metadata=minimal;"
             }
         }
-        getContent(options, req, res);
+        getContent(options, req).then(function(something){});
+    }
+);
+
+router.get('/:engagementid/docs', cors(serviceConfig.corsOptions), 
+    function(req, res) {
+        console.log(`Requesting documents for engagement ${req.params.engagementid}`);
+
     }
 );
 
@@ -56,7 +65,24 @@ router.get('/', cors(serviceConfig.corsOptions) , function(req, res){
             "Accept": "application/json; odata.metadata=minimal;"
         }
     }
-    getContent(options, req, res);
+    getContent(options, req).then(
+        function(theresp: any) {
+            if(theresp.response.statusCode !== 200) {
+                res.status(theresp.response.statusCode);
+                res.json({
+                    error: theresp.response.statusMessage
+                })
+            }
+            else {
+                let engagements = mapToEntity(JSON.parse(theresp.body));
+                res.status(200);
+                res.json(engagements);
+            }
+        },
+        function(error: any){
+            console.error(`An error occurred:\n${error}`);
+        }   
+    );
 });
 /**
  * Encapsulates code for making calls to my ThreeCloud endpoints. For GET requests only.
@@ -64,33 +90,34 @@ router.get('/', cors(serviceConfig.corsOptions) , function(req, res){
  * @param req 
  * @param res 
  */
-function getContent(options: any, req: any, res: any) {
+function getContent(options: any, req: any): Q.Promise<any> {
+
+    let deferred = q.defer();
     console.log(`Requesting resources from: ${options.url}`)
     console.log(`Access token: ${req.get('Authorization')}`);
 
     request.get(options, (error: any, response: any, body: any) => {
         if(error) {
-            console.error(`An error occurred:\n${error}`);
+            let theError = {
+                type: 'app',
+                message: `An error occurred:\n${error}`
+            }
+            deferred.reject(theError)
         }
         else {
-            if(response.statusCode != 200) {
-                res.status(response.statusCode);
-                res.json({
-                    error: response.statusMessage
-                })
+            let returnVal = {
+                response: response,
+                body: body
             }
-            else {
-                let engagements = mapToEntity(JSON.parse(body));
-                res.status(200);
-                res.json(engagements);
-            }
+            deferred.resolve(returnVal);
+            
         }
     });
+    return deferred.promise;
 }
 
 function mapToEntity(data:any){
     let engagements: Engagement[] = [];
-    //console.log(data);
     data.value.map((item: any, index: any) => {
         let eng:Engagement = {
             name: item.msdyn_name,
