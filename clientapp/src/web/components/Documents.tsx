@@ -23,7 +23,7 @@ export default class Documents extends React.Component<IDocumentsProps, IDocumen
     }
 
     public componentDidMount() {
-        let graphUrl = "http://localhost:3001/accounts/docs";
+        let graphUrl = "http://localhost:3001/engagement/:engagementid/docs";
         let component = this;
         let componentRequest = Adal.adalRequest({
             url: graphUrl,

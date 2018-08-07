@@ -86,7 +86,7 @@ router.get('/', cors(serviceConfig.corsOptions) , function(req, res){
 });
 /**
  * Encapsulates code for making calls to my ThreeCloud endpoints. For GET requests only.
- * @param urlPath 
+ * @param options
  * @param req 
  * @param res 
  */
